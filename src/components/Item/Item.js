@@ -2,19 +2,18 @@ import React from 'react';
 import './Item.css';
 
 export default function Item(props) {
-  const {altView, image, title, link} = props;
+  const {i, id, artist, title_short, duration, isCheck, onClickHandler} = props;
+
+  const onClick = id => {
+    return () => {
+      onClickHandler(id);
+    }
+  };
 
   return (
-    <div className={`item ` + (altView ? `item_alt-view` : ``)}>
-      <a className="item__image-box" href={link}>
-        <img src={image} alt="img" className="item__image"/>
+      <a className={`item__image-box ${ isCheck? "check": ""}`} onClick={onClick(id)}>
+       <p className={isCheck? "check": ""}>  {`${i+1}. ${artist} -  ${title_short} (${duration})`} </p>
       </a>
-
-      <div className="item__info-box">
-        <h2 className="item__title">{title}</h2>
-        {altView}
-      </div>
-    </div>
   )
 }
 
