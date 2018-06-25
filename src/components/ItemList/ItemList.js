@@ -1,19 +1,29 @@
 import React from 'react';
+import axios from 'axios';
 import './ItemList.css';
 import Item from '../Item/Item';
-import * as loadData from '../../assets/data'
 
 export default class ItemList extends React.Component {
-  itemsData;
-
   constructor() {
     super();
-    this.itemsData = loadData.data;
-    this.state = {
 
+
+    this.state = {
+      itemsData: [],
       altView: false,
       currentId: null
     };
+  }
+
+  componentDidMount(){
+    // this.itemsData = loadData.data;
+    // https://cors-anywhere.herokuapp.com/
+    axios('http://api.deezer.com/search/track/?q=metallica&index=0&limit=12',
+      { mode: 'Access-Control-Allow-Origin'})
+  .then(res => {
+        // let data = res.data;
+      this.state.itemsData.push(...res.data.data);
+    })
   }
 
   changeView = () => {
@@ -27,14 +37,14 @@ export default class ItemList extends React.Component {
   };
 
   render() {
-    const items = this.itemsData.map(
+    const items = this.state.itemsData.map(
       ({id, name, artist, picture_medium, link, duration, title_short}, i) => {
         let isCheck = (this.state.currentId == id);
         console.log(i + " "+isCheck);
         return (
-          <Item id={id.toString()}
-                key = {id}
-                i = {i}
+          <Item  i = {i}
+                id={id.toString()}
+                // key = {id}
                 artist = {artist.name}
                 link={link}
                 title_short = {title_short}
