@@ -11,7 +11,7 @@ export default function Item(props) {
   };
 
   return (
-      <a className={`item__image-box ${ isCheck? "check": ""}`} onClick={onClick(id)}>
+      <a className={`item__image-box ${ isCheck? "check": ""}`} onDoubleClick={onClick(id)}>
        <p className={isCheck? "check": ""}>  {`${i+1}. ${artist} -  ${title_short} (${duration})`} </p>
       </a>
   )

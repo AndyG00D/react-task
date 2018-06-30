@@ -18,8 +18,7 @@ export default class ItemList extends React.Component {
   componentDidMount(){
     // this.itemsData = loadData.data;
     // https://cors-anywhere.herokuapp.com/
-    axios('http://api.deezer.com/search/track/?q=metallica&index=0&limit=12',
-      { mode: 'Access-Control-Allow-Origin'})
+    axios('https://cors-anywhere.herokuapp.com/http://api.deezer.com/search/track/?q=metallica&index=0&limit=12')
   .then(res => {
         // let data = res.data;
       this.state.itemsData.push(...res.data.data);
@@ -36,10 +35,11 @@ export default class ItemList extends React.Component {
     console.log(id);
   };
 
+  //items
   render() {
     const items = this.state.itemsData.map(
       ({id, name, artist, picture_medium, link, duration, title_short}, i) => {
-        let isCheck = (this.state.currentId == id);
+        let isCheck = (this.state.currentId === id);
         console.log(i + " "+isCheck);
         return (
           <Item  i = {i}
@@ -55,6 +55,8 @@ export default class ItemList extends React.Component {
         )
       }
     );
+
+
 
     return (
       <div>
