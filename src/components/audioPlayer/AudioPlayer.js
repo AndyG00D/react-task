@@ -1,46 +1,18 @@
 import React, {PureComponent} from 'react';
-// import PropTypes from 'prop-types';
-// import classnames from 'classnames';
 import data from './data';
 import './AudioPlayer.css';
+import './Player.css';
 import TrackList from "./TrackList";
 import Controls from "./Controls";
 import ProgressBar from "./ProgressBar";
 import Volume from "./Volume";
 import TrackInfo from "./TrackInfo";
+import axios from "axios/index";
 
 class AudioPlayer extends PureComponent {
-  // static propTypes = {
-  //   tracks: PropTypes.array.isRequired,
-  //   autoplay: PropTypes.bool,
-  //   onTimeUpdate: PropTypes.func,
-  //   onEnded: PropTypes.func,
-  //   onError: PropTypes.func,
-  //   onPlay: PropTypes.func,
-  //   onPause: PropTypes.func,
-  //   onPrevious: PropTypes.func,
-  //   onNext: PropTypes.func,
-  // };
 
-  // static defaultProps = {
-  //   onTimeUpdate: () => {
-  //   },
-  //   onEnded: () => {
-  //   },
-  //   onError: () => {
-  //   },
-  //   onPlay: () => {
-  //   },
-  //   onPause: () => {
-  //   },
-  //   onPrevious: () => {
-  //   },
-  //   onNext: () => {
-  //   },
-  // };
-
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.state = {
       currentTrack: data.data[0],
@@ -48,7 +20,7 @@ class AudioPlayer extends PureComponent {
       currentIndex: 0,
       progress: 0,
       random: false,
-      playing: false, //!!props.autoplay,
+      playing: false,
       repeating: false,
       mute: false,
     };
@@ -59,24 +31,29 @@ class AudioPlayer extends PureComponent {
 
     this.audio.addEventListener('timeupdate', e => {
       this.updateProgress();
-
-      // props.onTimeUpdate(e);
     });
     this.audio.addEventListener('ended', e => {
       this.next();
-
-      // props.onEnded(e);
     });
     this.audio.addEventListener('error', e => {
       this.next();
 
-      // props.onError(e);
     });
+  }
+
+  componentDidMount() {
+    axios('https://cors-anywhere.herokuapp.com/http:/api.deezer.com//album/302127/tracks')
+      .then(res => {
+        this.setState({
+          tracks: res.data.data.sort(this.idSort),
+          currentTrack: this.state.tracks[0],
+        });
+      })
   }
 
   // Sort functions
   randSort = () => Math.random() - 0.5;
-  idSort = (a,b) =>  a.id - b.id;
+  idSort = (a, b) => a.id - b.id;
 
   // control functions
   updateProgress = () => {
@@ -89,7 +66,7 @@ class AudioPlayer extends PureComponent {
   };
 
   setProgress = e => {
-    const target = e.target.nodeName === 'SPAN' ? e.target.parentNode : e.target;
+    const target = e.target.nodeName === 'DIV' ? e.target.parentNode : e.target;
     const width = target.clientWidth;
     const rect = target.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
@@ -147,7 +124,6 @@ class AudioPlayer extends PureComponent {
 
     this.audio.src = active.preview;
     this.play();
-    // this.props.onNext();
   };
 
   previous = () => {
@@ -164,11 +140,10 @@ class AudioPlayer extends PureComponent {
 
     this.audio.src = active.preview;
     this.play();
-    // this.props.onPrevious();
   };
 
-  selectTrackNumber = (trackId) =>{
-    const {tracks, } = this.state;
+  selectTrackNumber = (trackId) => {
+    const {tracks,} = this.state;
     console.log(trackId);
     this.setState({
       currentIndex: trackId,
@@ -182,7 +157,7 @@ class AudioPlayer extends PureComponent {
 
   randomize = () => {
     const {random, tracks} = this.state;
-    const newSortSongs = !random? tracks.sort(this.randSort): tracks.sort(this.idSort);
+    const newSortSongs = !random ? tracks.sort(this.randSort) : tracks.sort(this.idSort);
 
     this.setState({
       tracks: newSortSongs,
@@ -205,6 +180,9 @@ class AudioPlayer extends PureComponent {
     this.audio.volume = !!mute;
   };
 
+// <div className={'player-cover ' + (!currentTrack.album.cover_big ? 'no-height' : '')}
+// style={{backgroundImage: `url(${currentTrack.album.cover_big || ''})`}}>
+
   render() {
     const {
       progress,
@@ -217,40 +195,44 @@ class AudioPlayer extends PureComponent {
 
     return (
       <div className="player-wrapper">
-        <div className="player">
 
-          <div className={'player-cover ' + (!currentTrack.album.cover_big ? 'no-height' : '')}
-               style={{backgroundImage: `url(${currentTrack.album.cover_big || ''})`}}>
+        <div className={'Background'}
+             style={{backgroundImage: `url(${currentTrack.album.cover_xl || ''})`}}/>
 
-          <TrackInfo
-            artist = {currentTrack.artist.name}
-            title = {currentTrack.title}
-          />
-          </div>
+        <div className="Player">
 
           <Volume
-            toggleMute = {this.toggleMute}
-            mute = {mute}
+            toggleMute={this.toggleMute}
+            mute={mute}
+          />
+
+          <div className={'Artwork'}
+               style={{backgroundImage: `url(${currentTrack.album.cover_big || ''})`}}/>
+
+          <TrackInfo
+            artist={currentTrack.artist.name}
+            title={currentTrack.title}
+            album={currentTrack.album.title}
           />
 
           <Controls
-            toggle = {this.toggle}
-            previous = {this.previous}
-            randomize = {this.randomize}
-            repeat = {this.repeat}
-            next = {this.next}
-            playing = {playing}
-            random = {random}
-            repeating = {repeating}
-            toggleMute = {this.toggleMute}
-            mute = {mute}
+            toggle={this.toggle}
+            previous={this.previous}
+            randomize={this.randomize}
+            repeat={this.repeat}
+            next={this.next}
+            playing={playing}
+            random={random}
+            repeating={repeating}
+            toggleMute={this.toggleMute}
+            mute={mute}
           />
 
           <ProgressBar
-            currentTime = {this.audio.currentTime}
-            duration = {currentTrack.duration}
-            progress = {progress}
-            setProgress = {this.setProgress}
+            currentTime={this.audio.currentTime}
+            duration={currentTrack.duration}
+            progress={progress}
+            setProgress={this.setProgress}
           />
 
         </div>

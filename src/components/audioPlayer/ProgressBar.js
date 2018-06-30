@@ -9,15 +9,17 @@ export default function ProgressBar (props) {
   };
 
     return (
+    <div>
+      <div className="Scrubber" onClick={e => props.setProgress(e)}>
+        <div className="Scrubber-Progress" style={{width: props.progress + '%'}}/>
+      </div>
+
+
       <div className="Timestamps">
         <span className="Time Time--current">{convertTime(props.currentTime)}</span>
-
-        <div className="player-progress-container" onClick={e => props.setProgress(e)}>
-          <span className="player-progress-value" style={{width: props.progress + '%'}}/>
-        </div>
-
         <span className="Time Time--total">{convertTime(props.duration)}</span>
       </div>
+    </div>
     )
 
 }
