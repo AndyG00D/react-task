@@ -1,15 +1,17 @@
-import React, {PureComponent} from 'react';
-import data from './data';
-import './AudioPlayer.css';
+import React from 'react';
+import data from '../../assets/data';
+import themes from './PlayerThemes'
 import './Player.css';
-import TrackList from "./TrackList";
-import Controls from "./Controls";
-import ProgressBar from "./ProgressBar";
-import Volume from "./Volume";
-import TrackInfo from "./TrackInfo";
+import PlayerTrackList from "./PlayerTrackList";
+import Controls from "./PlayerControls";
+import ProgressBar from "./PlayerProgressBar";
+import PlayerVolumeBtn from "./PlayerVolumeBtn";
+import TrackInfo from "./PlayerTrackInfo";
 import axios from "axios/index";
+import PlayerTimestamps from "./PlayerTimestamps";
+import PlayerThemeBtn from "./PlayerThemeBtn";
 
-class AudioPlayer extends PureComponent {
+class Player extends React.Component  {
 
   constructor() {
     super();
@@ -23,8 +25,10 @@ class AudioPlayer extends PureComponent {
       playing: false,
       repeating: false,
       mute: false,
+      currentTheme: 0
     };
 
+    this.player = document.querySelector('.player');
     this.audio = document.createElement('audio');
     this.audio.src = this.state.currentTrack.preview;
     this.audio.autoplay = !!this.state.autoplay;
@@ -37,7 +41,6 @@ class AudioPlayer extends PureComponent {
     });
     this.audio.addEventListener('error', e => {
       this.next();
-
     });
   }
 
@@ -143,7 +146,7 @@ class AudioPlayer extends PureComponent {
   };
 
   selectTrackNumber = (trackId) => {
-    const {tracks,} = this.state;
+    const {tracks} = this.state;
     console.log(trackId);
     this.setState({
       currentIndex: trackId,
@@ -157,7 +160,7 @@ class AudioPlayer extends PureComponent {
 
   randomize = () => {
     const {random, tracks} = this.state;
-    const newSortSongs = !random ? tracks.sort(this.randSort) : tracks.sort(this.idSort);
+    const newSortSongs = random ? tracks.sort(this.randSort) : tracks.sort(this.idSort);
 
     this.setState({
       tracks: newSortSongs,
@@ -180,8 +183,13 @@ class AudioPlayer extends PureComponent {
     this.audio.volume = !!mute;
   };
 
-// <div className={'player-cover ' + (!currentTrack.album.cover_big ? 'no-height' : '')}
-// style={{backgroundImage: `url(${currentTrack.album.cover_big || ''})`}}>
+  changeTheme = () => {
+    const {currentTheme} = this.state;
+    console.log(currentTheme);
+    this.setState({
+      currentTheme: (currentTheme === themes.length-1)? 0: currentTheme + 1
+    });
+  };
 
   render() {
     const {
@@ -191,27 +199,34 @@ class AudioPlayer extends PureComponent {
       mute,
       random,
       repeating,
+      currentTheme
     } = this.state;
 
     return (
-      <div className="player-wrapper">
+      <div className="player"
+           style={{'--theme-color': `${themes[currentTheme].color}`}}
+      >
 
-        <div className={'Background'}
+        <div className="player__background"
              style={{backgroundImage: `url(${currentTrack.album.cover_xl || ''})`}}/>
 
-        <div className="Player">
+        <div className="player__panel">
 
-          <Volume
+          <PlayerVolumeBtn
             toggleMute={this.toggleMute}
             mute={mute}
           />
 
-          <div className={'Artwork'}
+          <PlayerThemeBtn
+            changeTheme={this.changeTheme}
+          />
+
+          <div className="player__cover"
                style={{backgroundImage: `url(${currentTrack.album.cover_big || ''})`}}/>
 
           <TrackInfo
             artist={currentTrack.artist.name}
-            title={currentTrack.title}
+            title={currentTrack.title_short}
             album={currentTrack.album.title}
           />
 
@@ -228,16 +243,19 @@ class AudioPlayer extends PureComponent {
             mute={mute}
           />
 
-          <ProgressBar
+          <PlayerTimestamps
             currentTime={this.audio.currentTime}
             duration={currentTrack.duration}
+          />
+
+          <ProgressBar
             progress={progress}
             setProgress={this.setProgress}
           />
 
         </div>
 
-        <TrackList
+        <PlayerTrackList
           currentTrackIndex={this.state.currentTrack.id}
           selectTrackNumber={this.selectTrackNumber}
           tracks={this.state.tracks}
@@ -247,4 +265,4 @@ class AudioPlayer extends PureComponent {
   }
 }
 
-export default AudioPlayer;
+export default Player;
