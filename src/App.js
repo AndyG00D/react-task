@@ -18,10 +18,12 @@ export default function App() {
       <Header/>
       <div className="content">
         {/*<Player/>*/}
-        <Hello
-          number = {4}
-          name = {'Denis'}
-        />
+        <Route path="/" render={() => (
+          <Hello
+            number = {4}
+            name = {'Denis'}
+          />
+        )}/>
         <Route path="/movies" component={Movies}/>
       </div>
     </div>

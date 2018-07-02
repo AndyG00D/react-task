@@ -16,8 +16,8 @@ export default function Header() {
     <header className={styles.header}>
 
       <ul>
-        <li>home</li>
-        <li> <Link to="/movies"> movies</Link></li>
+        <li><Link to="/">home</Link></li>
+        <li> <Link exact to="/movies"> movies</Link></li>
         <li>about</li>
       </ul>
 
