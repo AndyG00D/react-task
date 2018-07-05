@@ -11,6 +11,8 @@ import axios from "axios/index";
 import PlayerTimestamps from "./PlayerTimestamps";
 import PlayerThemeBtn from "./PlayerThemeBtn";
 import PropTypes from 'prop-types';
+import {connect} from "react-redux";
+import {fetcPlayList} from "../../Actions/Index"
 
 class Player extends React.Component  {
 
@@ -59,13 +61,15 @@ class Player extends React.Component  {
   }
 
   componentDidMount() {
-    axios('https://cors-anywhere.herokuapp.com/http:/api.deezer.com//album/302127/tracks')
-      .then(res => {
-        this.setState({
-          tracks: res.data.data.sort(this.idSort),
-          currentTrack: this.state.tracks[0],
-        });
-      })
+    // axios('https://cors-anywhere.herokuapp.com/http:/api.deezer.com/album/302127/tracks')
+    //   .then(res => {
+    //     this.setState({
+    //       tracks: res.data.data.sort(this.idSort),
+    //       currentTrack: this.state.tracks[0],
+    //     });
+    //   })
+
+    this.props.songs.playList
   }
 
   // Sort functions
@@ -279,4 +283,16 @@ class Player extends React.Component  {
   }
 }
 
-export default Player;
+const mapStateToProps =  store => {
+  const {isloading, playList, errors} = store
+
+  return {
+    playList,
+    errors
+  }
+}
+
+export default connect(mapStateToProps, { fetcPlayList })(Player)
+// (TestComponents)
+
+// export default Player;

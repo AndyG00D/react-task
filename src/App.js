@@ -5,9 +5,20 @@ import Player from "./components/Player/Player";
 import {BrowserRouter, Route} from "react-router-dom"
 import ItemList from "./components/ItemList/ItemList";
 import Login from "./components/Login/Login";
+import { applyMiddleware, compose, createStore } from 'redux'
+import reduxThunk from 'redux-thunk'
+import {Provider} from 'react-redux'
+import rootReducer from './Reducer/index'
+
+
+const store = createStore(rootReducer, compose(
+  applyMiddleware(reduxThunk),
+  window.devToolsExtension ? window.devToolsExtension() : f => f,
+));
 
 export default function App() {
   return (
+    <Provider store={store}>
     <BrowserRouter>
     <div className="app">
       <Header/>
@@ -18,5 +29,6 @@ export default function App() {
       </div>
     </div>
     </BrowserRouter>
+    </Provider>
   );
 }
