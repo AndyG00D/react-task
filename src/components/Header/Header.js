@@ -1,31 +1,17 @@
 import React from 'react';
-import styles from './Header.css'
-import styled from 'styled-components'
+import './Header.css'
 import {Link} from 'react-router-dom'
-
-const LogoStyled = styled.img`
-
-  float: left;
-  height: 20px;
-
-`;
-
 
 export default function Header() {
   return (
-    <header className={styles.header}>
+    <header className="header">
+      <h1 className="header__title">React Task</h1>
 
-      <ul>
-        <li><Link to="/">home</Link></li>
-        <li> <Link exact to="/movies"> movies</Link></li>
-        <li>about</li>
+      <ul className={"header__navbar"}>
+        <li><Link to="/itemList">Task 1 (List)</Link></li>
+        <li> <Link exact to="/player">Task 2 (Player) </Link></li>
+        <li> <Link exact to="/login">Task 3 (Login) </Link></li>
       </ul>
-
-      <LogoStyled
-        src="http://pluspng.com/img-png/deezer-png-deezer-1694.png"
-        alt="logo"
-      />
-      <h1 className={styles.header__title}>React Task</h1>
     </header>
   );
 }

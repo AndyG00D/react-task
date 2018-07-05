@@ -1,62 +1,34 @@
 import React from 'react';
-import axios from 'axios';
 import './ItemList.css';
-import Item from '../Item/Item';
+import Item from './Item';
+import data from '../../assets/artistsData'
 
 export default class ItemList extends React.Component {
   constructor() {
     super();
-
-
     this.state = {
-      itemsData: [],
+      itemsData: data.data,
       altView: false,
-      currentId: null
     };
-  }
-
-  componentDidMount(){
-    // this.itemsData = loadData.data;
-    // https://cors-anywhere.herokuapp.com/
-    axios('https://cors-anywhere.herokuapp.com/http://api.deezer.com/search/track/?q=metallica&index=0&limit=12')
-  .then(res => {
-        // let data = res.data;
-      this.state.itemsData.push(...res.data.data);
-    })
   }
 
   changeView = () => {
     this.setState({altView: !this.state.altView});
   };
 
-  getId = (id) => {
-    this.setState({currentId: id});
-    // this.itemsData.map( item => item.isCheck = (this.state.currentId === item.id));
-    console.log(id);
-  };
-
-  //items
   render() {
     const items = this.state.itemsData.map(
-      ({id, name, artist, picture_medium, link, duration, title_short}, i) => {
-        let isCheck = (this.state.currentId === id);
-        console.log(i + " "+isCheck);
+      ({id, name, picture_medium, link}) => {
         return (
-          <Item  i = {i}
-                id={id.toString()}
-                // key = {id}
-                artist = {artist.name}
+          <Item key={id.toString()}
+                altView={this.state.altView}
+                image={picture_medium}
+                title={name}
                 link={link}
-                title_short = {title_short}
-                duration = {duration}
-                isCheck = {isCheck}
-                onClickHandler = {this.getId}
           />
         )
       }
     );
-
-
 
     return (
       <div>
@@ -70,4 +42,3 @@ export default class ItemList extends React.Component {
     );
   }
 }
-

@@ -1,5 +1,5 @@
 import React from 'react';
-import data from '../../assets/data';
+import data from '../../assets/traksData';
 import themes from './PlayerThemes'
 import './Player.css';
 import PlayerTrackList from "./PlayerTrackList";
@@ -10,8 +10,22 @@ import TrackInfo from "./PlayerTrackInfo";
 import axios from "axios/index";
 import PlayerTimestamps from "./PlayerTimestamps";
 import PlayerThemeBtn from "./PlayerThemeBtn";
+import PropTypes from 'prop-types';
 
 class Player extends React.Component  {
+
+  static propTypes = {
+    tracks: PropTypes.array.isRequired,
+    autoplay: PropTypes.bool,
+    onTimeUpdate: PropTypes.func,
+    onEnded: PropTypes.func,
+    onError: PropTypes.func,
+    onPlay:  PropTypes.func,
+    onPause: PropTypes.func,
+    onPrevious: PropTypes.func,
+    onNext: PropTypes.func
+  };
+
 
   constructor() {
     super();

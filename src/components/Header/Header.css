@@ -1,21 +1,41 @@
 .header {
-  position: fixed;
-  top: 0;
-  z-index: 99;
-  width: 100%;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
   padding: 1rem 5rem;
   color: var(--text-color);
   background-color: var(--theme-color);
 }
 
 .header__logo {
-  float: left;
   height: 50px;
 }
 
 .header__title {
   font-size: 2rem;
-  flex-grow: 1;
   margin: 0;
+}
+
+.header__navbar{
+  list-style-type: none;
+  display: flex;
+  flex-flow: row;
+}
+
+.header__navbar a {
+  /*float: left;*/
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.header__navbar a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.header__navbar a.active {
+  background-color: #4CAF50;
+  color: white;
 }

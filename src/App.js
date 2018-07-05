@@ -2,14 +2,9 @@ import React from 'react';
 import './App.css';
 import Header from "./components/Header/Header";
 import Player from "./components/Player/Player";
-import Hello from "./components/Hello/Hello";
-// import Hello from "./components/Hello/Hello";
-import {BrowserRouter, Link, Route} from "react-router-dom"
-
-const Movies = function(){
-  return <h1>Movies</h1>
-};
-
+import {BrowserRouter, Route} from "react-router-dom"
+import ItemList from "./components/ItemList/ItemList";
+import Login from "./components/Login/Login";
 
 export default function App() {
   return (
@@ -17,14 +12,9 @@ export default function App() {
     <div className="app">
       <Header/>
       <div className="content">
-        {/*<Player/>*/}
-        <Route path="/" render={() => (
-          <Hello
-            number = {4}
-            name = {'Denis'}
-          />
-        )}/>
-        <Route path="/movies" component={Movies}/>
+        <Route path="/itemList" component={ItemList}/>
+        <Route path="/player" component={Player}/>
+        <Route path="/login" component={Login}/>
       </div>
     </div>
     </BrowserRouter>
