@@ -14,40 +14,24 @@ import {connect} from "react-redux";
 import * as actions from "../../actions/index"
 
 class Player extends React.Component {
-
+  //
   // static propTypes = {
   //   tracks: PropTypes.array.isRequired,
-  //   autoplay: PropTypes.bool,
   //   onTimeUpdate: PropTypes.func,
   //   onEnded: PropTypes.func,
-  //   onError: PropTypes.func,
-  //   onPlay:  PropTypes.func,
-  //   onPause: PropTypes.func,
+  //   play:  PropTypes.func,
+  //   pause: PropTypes.func,
   //   onPrevious: PropTypes.func,
   //   onNext: PropTypes.func
+  //
   // };
-
+  //
 
   constructor(props) {
     super(props);
 
-    this.state = {
-      // currentTrack: data.data[0],
-      // tracks: data.data.sort(this.idSort),
-      // currentIndex: 0,
-      // progress: 0,
-      random: false,
-      // playing: false,
-      // repeating: false,
-      // mute: false,
-      // currentTheme: 0
-    };
-
-    this.player = document.querySelector('.player');
     this.audio = document.createElement('audio');
-    // this.audio.src = data.data[0].preview;
     this.audio.src = this.props.currentTrack.preview;
-    this.audio.autoplay = !!this.state.autoplay;
 
     this.audio.addEventListener('timeupdate', e => {
       this.updateProgress();
@@ -62,23 +46,9 @@ class Player extends React.Component {
   }
 
   componentDidMount() {
-    // axios('https://cors-anywhere.herokuapp.com/http:/api.deezer.com/album/302127/tracks')
-    //   .then(res => {
-    //     this.setState({
-    //       tracks: res.data.data.sort(this.idSort),
-    //       currentTrack: this.state.tracks[0],
-    //     });
-    //   })
 
     this.props.fetchSongs();
     this.audio.src = this.props.currentTrack.preview;
-  }
-
-  componentWillUnmount() {
-  }
-
-  componentDidUpdate() {
-    // this.audio.src = this.props.currentTrack.preview;
   }
 
   // Sort functions
@@ -189,7 +159,7 @@ class Player extends React.Component {
 
         <div className="player__panel">
 
-          <div className="player__loading">{isLoading? 'Loading new tracks...': ''}</div>
+          <div className="player__loading">{isLoading ? 'Loading new tracks...' : ''}</div>
 
           <PlayerVolumeBtn
             toggleMute={this.toggleMute}
@@ -245,18 +215,30 @@ class Player extends React.Component {
 }
 
 const mapStateToProps = store => {
-  const {isLoading, tracks, errors, repeating, currentTrack, mute, currentIndex, progress, random, playing, currentTheme} = store;
-  return {
-    random,
-    progress,
-    currentIndex,
+  const {
     isLoading,
     tracks,
     errors,
+    repeating,
     currentTrack,
     mute,
+    currentIndex,
+    progress,
+    random,
     playing,
+    currentTheme
+  } = store;
+  return {
+    isLoading,
+    tracks,
+    errors,
     repeating,
+    currentTrack,
+    mute,
+    currentIndex,
+    progress,
+    random,
+    playing,
     currentTheme
   }
 };

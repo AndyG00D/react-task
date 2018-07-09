@@ -1,8 +1,6 @@
 import axios from "axios/index";
 import * as types from './types.js';
 
-
-
 export const fetchSongs = () => {
   return function (dispatch) {
     dispatch({type: types.FETCH_SONGS_REQUEST});
@@ -74,27 +72,6 @@ export const toggleRepeat = () => {
   }
 };
 
-
-export const next = () => {
-  return function (dispatch, getState) {
-    const {repeating, currentIndex, tracks} = getState();
-    dispatch({
-      type: types.NEXT,
-      // payload: getNextTrack(currentIndex, tracks, repeating)
-      payload: getNextTrack(currentIndex, repeating, tracks)
-    });
-  }
-};
-
-function getNextTrack(currentIndex, tracks, repeating){
-  const total = tracks.length;
-  const newSongToPlay = repeating
-    ? currentIndex
-    : currentIndex < total - 1
-      ? currentIndex + 1
-      : 0;
-  return newSongToPlay;
-}
 
 export const changeTheme = (nextTheme) => {
   return function (dispatch, getState) {
