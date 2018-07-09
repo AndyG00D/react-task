@@ -9,8 +9,9 @@ export default function Header() {
 
       <ul className={"header__navbar"}>
         <li><Link to="/itemList">Task 1 (List)</Link></li>
-        <li> <Link exact to="/player">Task 2 (Player) </Link></li>
-        <li> <Link exact to="/login">Task 3 (Login) </Link></li>
+        <li> <Link to="/player">Task 2 (Player) </Link></li>
+        <li> <Link to="/login">Task 3 (Login) </Link></li>
+        <li> <Link to="/form">Form</Link></li>
       </ul>
     </header>
   );

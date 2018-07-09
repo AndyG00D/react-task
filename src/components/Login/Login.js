@@ -1,10 +1,14 @@
 import React from 'react';
 import axios from "axios/index";
 import './Login.css';
+import FormTest from "../Form/FormTest";
+import {connect} from "react-redux";
+// import * as actions from "../../actions";
+import {fetchAuth} from "../../actions/auth";
 
 
 
-export default class Login extends React.Component {
+class Login extends React.Component {
 
   constructor() {
     super();
@@ -42,6 +46,11 @@ export default class Login extends React.Component {
         });
     };
 
+  submit = values => {
+    console.log(values);
+    this.props.fetchAuth(values);
+  };
+
 
     render() {
 
@@ -52,11 +61,16 @@ export default class Login extends React.Component {
         <br/>
         <br/>
         {this.state.token}
+        <br/>
+        <br/>
+        <FormTest onSubmit = {this.submit}/>
+
       </div>
     );
   }
 }
 
+export default connect(null, {fetchAuth})(Login);
 
 
 

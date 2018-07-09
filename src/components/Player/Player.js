@@ -214,7 +214,7 @@ class Player extends React.Component {
   }
 }
 
-const mapStateToProps = store => {
+const mapStateToProps = ({ player }) => {
   const {
     isLoading,
     tracks,
@@ -227,7 +227,7 @@ const mapStateToProps = store => {
     random,
     playing,
     currentTheme
-  } = store;
+  } = player;
   return {
     isLoading,
     tracks,
