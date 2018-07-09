@@ -8,13 +8,14 @@ import Login from "./components/Login/Login";
 import { applyMiddleware, compose, createStore } from 'redux'
 import reduxThunk from 'redux-thunk'
 import {Provider} from 'react-redux'
-import rootReducer from './Reducer/index'
+import rootReducer from './reducer/index'
 
 
 const store = createStore(rootReducer, compose(
   applyMiddleware(reduxThunk),
   window.devToolsExtension ? window.devToolsExtension() : f => f,
 ));
+
 
 export default function App() {
   return (

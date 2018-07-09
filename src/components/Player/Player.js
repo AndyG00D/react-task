@@ -1,5 +1,4 @@
 import React from 'react';
-import data from '../../assets/traksData';
 import themes from './PlayerThemes'
 import './Player.css';
 import PlayerTrackList from "./PlayerTrackList";
@@ -7,46 +6,47 @@ import Controls from "./PlayerControls";
 import ProgressBar from "./PlayerProgressBar";
 import PlayerVolumeBtn from "./PlayerVolumeBtn";
 import TrackInfo from "./PlayerTrackInfo";
-import axios from "axios/index";
+// import axios from "axios/index";
 import PlayerTimestamps from "./PlayerTimestamps";
 import PlayerThemeBtn from "./PlayerThemeBtn";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {fetcPlayList} from "../../Actions/Index"
+import * as actions from "../../actions/index"
 
-class Player extends React.Component  {
+class Player extends React.Component {
 
-  static propTypes = {
-    tracks: PropTypes.array.isRequired,
-    autoplay: PropTypes.bool,
-    onTimeUpdate: PropTypes.func,
-    onEnded: PropTypes.func,
-    onError: PropTypes.func,
-    onPlay:  PropTypes.func,
-    onPause: PropTypes.func,
-    onPrevious: PropTypes.func,
-    onNext: PropTypes.func
-  };
+  // static propTypes = {
+  //   tracks: PropTypes.array.isRequired,
+  //   autoplay: PropTypes.bool,
+  //   onTimeUpdate: PropTypes.func,
+  //   onEnded: PropTypes.func,
+  //   onError: PropTypes.func,
+  //   onPlay:  PropTypes.func,
+  //   onPause: PropTypes.func,
+  //   onPrevious: PropTypes.func,
+  //   onNext: PropTypes.func
+  // };
 
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
-      currentTrack: data.data[0],
-      tracks: data.data.sort(this.idSort),
-      currentIndex: 0,
-      progress: 0,
+      // currentTrack: data.data[0],
+      // tracks: data.data.sort(this.idSort),
+      // currentIndex: 0,
+      // progress: 0,
       random: false,
-      playing: false,
-      repeating: false,
-      mute: false,
-      currentTheme: 0
+      // playing: false,
+      // repeating: false,
+      // mute: false,
+      // currentTheme: 0
     };
 
     this.player = document.querySelector('.player');
     this.audio = document.createElement('audio');
-    this.audio.src = this.state.currentTrack.preview;
+    // this.audio.src = data.data[0].preview;
+    this.audio.src = this.props.currentTrack.preview;
     this.audio.autoplay = !!this.state.autoplay;
 
     this.audio.addEventListener('timeupdate', e => {
@@ -58,6 +58,7 @@ class Player extends React.Component  {
     this.audio.addEventListener('error', e => {
       this.next();
     });
+
   }
 
   componentDidMount() {
@@ -69,7 +70,15 @@ class Player extends React.Component  {
     //     });
     //   })
 
-    this.props.songs.playList
+    this.props.fetchSongs();
+    this.audio.src = this.props.currentTrack.preview;
+  }
+
+  componentWillUnmount() {
+  }
+
+  componentDidUpdate() {
+    // this.audio.src = this.props.currentTrack.preview;
   }
 
   // Sort functions
@@ -80,10 +89,7 @@ class Player extends React.Component  {
   updateProgress = () => {
     const {duration, currentTime} = this.audio;
     const progress = (currentTime * 100) / duration;
-
-    this.setState({
-      progress: progress,
-    });
+    this.props.setProgress(progress);
   };
 
   setProgress = e => {
@@ -96,129 +102,82 @@ class Player extends React.Component  {
     const progress = (currentTime * 100) / duration;
 
     this.audio.currentTime = currentTime;
-
-    this.setState({
-      progress: progress,
-    });
-
+    this.props.setProgress(progress);
     this.play();
   };
 
   play = () => {
-    this.setState({
-      playing: true,
-    });
-
+    this.props.play();
     this.audio.play();
-    // this.props.onPlay();
   };
 
   pause = () => {
-    this.setState({
-      playing: false,
-    });
-
+    this.props.pause();
     this.audio.pause();
-    // this.props.onPause();
   };
 
   toggle = () => {
-    this.state.playing ? this.pause() : this.play();
+    this.props.playing ? this.pause() : this.play();
+  };
+
+  changeTrackByIndex = (trackIndex) => {
+    Promise.resolve(this.props.setCurrentTrack(trackIndex))
+      .then(() => {
+          this.audio.src = this.props.currentTrack.preview;
+          this.play();
+        }
+      );
   };
 
   next = () => {
-    const {repeating, currentIndex, tracks} = this.state;
+    const {repeating, currentIndex, tracks} = this.props;
     const total = tracks.length;
-    const newSongToPlay = repeating
+    const newTrackIndex = repeating
       ? currentIndex
       : currentIndex < total - 1
         ? currentIndex + 1
         : 0;
-    const active = tracks[newSongToPlay];
 
-    this.setState({
-      currentIndex: newSongToPlay,
-      currentTrack: active,
-      progress: 0,
-      repeating: false,
-    });
-
-    this.audio.src = active.preview;
-    this.play();
+    this.changeTrackByIndex(newTrackIndex);
   };
 
   previous = () => {
-    const {currentIndex, tracks} = this.state;
+    const {currentIndex, tracks} = this.props;
     const total = tracks.length;
-    const newSongToPlay = currentIndex > 0 ? currentIndex - 1 : total - 1;
-    const active = tracks[newSongToPlay];
+    const newTrackIndex = currentIndex > 0 ? currentIndex - 1 : total - 1;
 
-    this.setState({
-      currentIndex: newSongToPlay,
-      currentTrack: active,
-      progress: 0,
-    });
-
-    this.audio.src = active.preview;
-    this.play();
-  };
-
-  selectTrackNumber = (trackId) => {
-    const {tracks} = this.state;
-    console.log(trackId);
-    this.setState({
-      currentIndex: trackId,
-      currentTrack: tracks[trackId],
-      progress: 0
-    });
-
-    this.audio.src = tracks[trackId].preview;
-    this.play();
+    this.changeTrackByIndex(newTrackIndex);
   };
 
   randomize = () => {
-    const {random, tracks} = this.state;
-    const newSortSongs = random ? tracks.sort(this.randSort) : tracks.sort(this.idSort);
-
-    this.setState({
-      tracks: newSortSongs,
-      random: !random,
-    });
+    const {random, tracks} = this.props;
+    const newSortTracks = random ? tracks.sort(this.randSort) : tracks.sort(this.idSort);
+    this.props.toggleRandom(newSortTracks);
   };
 
-  repeat = () =>
-    this.setState({
-      repeating: !this.state.repeating,
-    });
-
   toggleMute = () => {
-    const {mute} = this.state;
-
-    this.setState({
-      mute: !mute,
-    });
-
-    this.audio.volume = !!mute;
+    this.props.toggleMute();
+    this.audio.volume = !!this.props.mute;
   };
 
   changeTheme = () => {
-    const {currentTheme} = this.state;
-    console.log(currentTheme);
-    this.setState({
-      currentTheme: (currentTheme === themes.length-1)? 0: currentTheme + 1
-    });
+    const {currentTheme} = this.props;
+    const nextTheme = (currentTheme === themes.length - 1) ? 0 : currentTheme + 1;
+    this.props.changeTheme(nextTheme);
   };
 
   render() {
     const {
-      progress,
+      isLoading,
+      tracks,
       currentTrack,
-      playing,
-      mute,
-      random,
       repeating,
+      progress,
+      playing,
+      random,
+      mute,
       currentTheme
-    } = this.state;
+    } = this.props;
 
     return (
       <div className="player"
@@ -229,6 +188,8 @@ class Player extends React.Component  {
              style={{backgroundImage: `url(${currentTrack.album.cover_xl || ''})`}}/>
 
         <div className="player__panel">
+
+          <div className="player__loading">{isLoading? 'Loading new tracks...': ''}</div>
 
           <PlayerVolumeBtn
             toggleMute={this.toggleMute}
@@ -252,7 +213,7 @@ class Player extends React.Component  {
             toggle={this.toggle}
             previous={this.previous}
             randomize={this.randomize}
-            repeat={this.repeat}
+            repeat={this.props.toggleRepeat}
             next={this.next}
             playing={playing}
             random={random}
@@ -263,7 +224,7 @@ class Player extends React.Component  {
 
           <PlayerTimestamps
             currentTime={this.audio.currentTime}
-            duration={currentTrack.duration}
+            duration={this.audio.duration}
           />
 
           <ProgressBar
@@ -274,25 +235,32 @@ class Player extends React.Component  {
         </div>
 
         <PlayerTrackList
-          currentTrackIndex={this.state.currentTrack.id}
-          selectTrackNumber={this.selectTrackNumber}
-          tracks={this.state.tracks}
+          currentTrackIndex={currentTrack.id}
+          changeTrackByIndex={this.changeTrackByIndex}
+          tracks={tracks}
         />
       </div>
     );
   }
 }
 
-const mapStateToProps =  store => {
-  const {isloading, playList, errors} = store
-
+const mapStateToProps = store => {
+  const {isLoading, tracks, errors, repeating, currentTrack, mute, currentIndex, progress, random, playing, currentTheme} = store;
   return {
-    playList,
-    errors
+    random,
+    progress,
+    currentIndex,
+    isLoading,
+    tracks,
+    errors,
+    currentTrack,
+    mute,
+    playing,
+    repeating,
+    currentTheme
   }
-}
+};
 
-export default connect(mapStateToProps, { fetcPlayList })(Player)
-// (TestComponents)
 
-// export default Player;
+export default connect(mapStateToProps, actions)(Player);
+

@@ -33,7 +33,7 @@ export default class PlayerTrackList extends React.Component {
               }
             }}
             onClick={() => {
-              this.props.selectTrackNumber(i)
+              this.props.changeTrackByIndex(i)
             }}
           >
             <span className="player__track-number">{i + 1}.</span>
