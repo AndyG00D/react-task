@@ -9,7 +9,7 @@ import { applyMiddleware, compose, createStore } from 'redux'
 import reduxThunk from 'redux-thunk'
 import {Provider} from 'react-redux'
 import rootReducer from './reducer/index'
-import FormTest from "./components/Form/FormTest";
+import LoginReqresIn from "./components/LoginReqresIn/LoginReqresIn";
 
 
 const store = createStore(rootReducer, compose(
@@ -28,7 +28,7 @@ export default function App() {
         <Route exact path="/itemList" component={ItemList}/>
         <Route exact path="/player" component={Player}/>
         <Route exact path="/login" component={Login}/>
-        <Route exact path="/form" component={FormTest}/>
+        <Route exact path="/form" component={LoginReqresIn}/>
       </div>
     </div>
     </BrowserRouter>

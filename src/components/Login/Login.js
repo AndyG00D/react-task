@@ -4,11 +4,10 @@ import './Login.css';
 import FormTest from "../Form/FormTest";
 import {connect} from "react-redux";
 // import * as actions from "../../actions";
-import {fetchAuth} from "../../actions/auth";
 
 
 
-class Login extends React.Component {
+export default class Login extends React.Component {
 
   constructor() {
     super();
@@ -61,16 +60,10 @@ class Login extends React.Component {
         <br/>
         <br/>
         {this.state.token}
-        <br/>
-        <br/>
-        <FormTest onSubmit = {this.submit}/>
-
       </div>
     );
   }
 }
-
-export default connect(null, {fetchAuth})(Login);
 
 
 

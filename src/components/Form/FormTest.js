@@ -29,11 +29,12 @@ const RenderField = ({input, meta}) => {
 let FormTest = props => {
 
   const submitted = (values) => {
-    console.log(values);
+    // console.log(values);
   };
 
+  // onSubmit={props.handleSubmit()}
   return (
-  <form className="test-form" onSubmit={props.handleSubmit(submitted)}>
+  <form className="test-form" onSubmit={props.handleSubmit}>
     {/*<div>*/}
       {/*<label htmlFor="firstName">First Name</label>*/}
       {/*<Field name="firstName" component={RenderField} type="text"/>*/}
