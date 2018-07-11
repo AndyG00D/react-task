@@ -1,4 +1,5 @@
 import React from 'react';
+import {convertTime} from "../../utils";
 
 export default class PlayerTrackList extends React.Component {
   constructor(props) {
@@ -20,13 +21,8 @@ export default class PlayerTrackList extends React.Component {
     }
   }
 
-  convertTime(time) {
-    const minutes = "0" + Math.floor(time / 60);
-    const seconds = "0" + (time - minutes * 60);
-    return minutes.substr(-2) + ":" + seconds.substr(-2);
-  }
-
   render() {
+
     const tracks = this.props.tracks.map(
       ({id, duration, title, artist}, i) => {
         let isCheck = this.props.currentTrackIndex === id;
@@ -39,7 +35,7 @@ export default class PlayerTrackList extends React.Component {
           >
             <span className="player__track-number">{i + 1}.</span>
             <span className="player__track-title">{artist.name} - {title}</span>
-            <span className="player__track-duration">{this.convertTime(duration)}</span>
+            <span className="player__track-duration">{convertTime(duration)}</span>
           </li>
         );
 

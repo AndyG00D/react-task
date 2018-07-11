@@ -1,52 +1,60 @@
 import React from 'react';
+import PlayerBtn from "./PlayerBtn";
 
 export default function PlayerControls(props) {
+  const {
+    playing,
+    togglePlay,
+    onPrevious,
+    onNext,
+    random,
+    toggleRandom,
+    repeating,
+    toggleRepeat
+  } = props;
 
-    return (
-      <div className="player__controls">
+  return (
+    <div className="player__controls">
 
-        <button
-          className={'player__btn small ' + (props.random ? 'active' : '')}
-          onClick={props.randomize}
-          title="Shuffle"
-        >
-          <i className="fa fa-random"/>
-        </button>
+      <PlayerBtn
+        title="Shuffle"
+        btnClassName={'small ' + (random ? 'active' : '')}
+        icoClassName="fa-random"
+        onClick={toggleRandom}
+      />
 
-        <div className="player__controls_main">
-          <button
-            onClick={props.previous}
-            className="player__btn player__btn_medium"
-            title="Previous Song"
-          >
-            <i className="fa fa-backward"/>
-          </button>
+      <div className="player__controls_main">
 
-          <button
-            onClick={props.toggle}
-            className="player__btn player__btn_big"
-            title="Play/Pause"
-          >
-            <i className={"fa " + (props.playing ? "fa-pause" : "fa-play")}/>
-          </button>
+        <PlayerBtn
+          title="Previous"
+          btnClassName="player__btn_medium"
+          icoClassName="fa-backward"
+          onClick={onPrevious}
+        />
 
-          <button
-            onClick={props.next}
-            className="player__btn player__btn_medium"
-            title="Next Song"
-          >
-            <i className="fa fa-forward"/>
-          </button>
-        </div>
+        <PlayerBtn
+          title="Play/Pause"
+          btnClassName="player__btn_big"
+          icoClassName={playing ? "fa-pause" : "fa-play"}
+          onClick={togglePlay}
+        />
 
-        <button
-          className={'player__btn small ' + (props.repeating ? 'active' : '')}
-          onClick={props.repeat}
-          title="Repeat"
-        >
-          <i className="fa fa-repeat"/>
-        </button>
+        <PlayerBtn
+          title="Next"
+          btnClassName="player__btn_medium"
+          icoClassName="fa-forward"
+          onClick={onNext}
+        />
 
       </div>
-    )
+
+      <PlayerBtn
+        title="Repeat"
+        btnClassName={"small" + (repeating ? "active" : "")}
+        icoClassName="fa-repeat"
+        onClick={toggleRepeat}
+      />
+
+    </div>
+  )
 }

@@ -4,14 +4,13 @@ import './Player.css';
 import PlayerTrackList from "./PlayerTrackList";
 import Controls from "./PlayerControls";
 import ProgressBar from "./PlayerProgressBar";
-import PlayerVolumeBtn from "./PlayerVolumeBtn";
 import TrackInfo from "./PlayerTrackInfo";
 // import axios from "axios/index";
 import PlayerTimestamps from "./PlayerTimestamps";
-import PlayerThemeBtn from "./PlayerThemeBtn";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import * as actions from "../../actions/index"
+import PlayerBtn from "./PlayerBtn";
 
 class Player extends React.Component {
   //
@@ -37,10 +36,10 @@ class Player extends React.Component {
       this.updateProgress();
     });
     this.audio.addEventListener('ended', e => {
-      this.next();
+      this.onNext();
     });
     this.audio.addEventListener('error', e => {
-      this.next();
+      this.onNext();
     });
 
   }
@@ -86,7 +85,7 @@ class Player extends React.Component {
     this.audio.pause();
   };
 
-  toggle = () => {
+  togglePlay = () => {
     this.props.playing ? this.pause() : this.play();
   };
 
@@ -99,7 +98,7 @@ class Player extends React.Component {
       );
   };
 
-  next = () => {
+  onNext = () => {
     const {repeating, currentIndex, tracks} = this.props;
     const total = tracks.length;
     const newTrackIndex = repeating
@@ -111,7 +110,7 @@ class Player extends React.Component {
     this.changeTrackByIndex(newTrackIndex);
   };
 
-  previous = () => {
+  onPrevious = () => {
     const {currentIndex, tracks} = this.props;
     const total = tracks.length;
     const newTrackIndex = currentIndex > 0 ? currentIndex - 1 : total - 1;
@@ -119,7 +118,7 @@ class Player extends React.Component {
     this.changeTrackByIndex(newTrackIndex);
   };
 
-  randomize = () => {
+  toggleRandom = () => {
     const {random, tracks} = this.props;
     const newSortTracks = random ? tracks.sort(this.randSort) : tracks.sort(this.idSort);
     this.props.toggleRandom(newSortTracks);
@@ -146,7 +145,8 @@ class Player extends React.Component {
       playing,
       random,
       mute,
-      currentTheme
+      currentTheme,
+      toggleRepeat
     } = this.props;
 
     return (
@@ -161,13 +161,18 @@ class Player extends React.Component {
 
           <div className="player__loading">{isLoading ? 'Loading new tracks...' : ''}</div>
 
-          <PlayerVolumeBtn
-            toggleMute={this.toggleMute}
-            mute={mute}
+          <PlayerBtn
+            title="Mute/Unmute"
+            btnClassName="small player__btn_volume"
+            icoClassName={mute ? 'fa-volume-off' : 'fa-volume-up'}
+            onClick={this.toggleMute}
           />
 
-          <PlayerThemeBtn
-            changeTheme={this.changeTheme}
+          <PlayerBtn
+            title="Change Theme"
+            btnClassName="small player__btn_theme"
+            icoClassName="fa-circle"
+            onClick={this.changeTheme}
           />
 
           <div className="player__cover"
@@ -180,16 +185,14 @@ class Player extends React.Component {
           />
 
           <Controls
-            toggle={this.toggle}
-            previous={this.previous}
-            randomize={this.randomize}
-            repeat={this.props.toggleRepeat}
-            next={this.next}
             playing={playing}
+            togglePlay={this.togglePlay}
+            onPrevious={this.onPrevious}
+            onNext={this.onNext}
             random={random}
+            toggleRandom={this.toggleRandom}
             repeating={repeating}
-            toggleMute={this.toggleMute}
-            mute={mute}
+            toggleRepeat={toggleRepeat}
           />
 
           <PlayerTimestamps
@@ -201,6 +204,7 @@ class Player extends React.Component {
             progress={progress}
             setProgress={this.setProgress}
           />
+
 
         </div>
 
@@ -214,7 +218,7 @@ class Player extends React.Component {
   }
 }
 
-const mapStateToProps = ({ player }) => {
+const mapStateToProps = ({player}) => {
   const {
     isLoading,
     tracks,
