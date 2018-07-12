@@ -3,6 +3,7 @@ import axios from "axios/index";
 import './Login.css';
 import FormTest from "../Form/FormTest";
 import {connect} from "react-redux";
+import {apiUrls} from "../../apiUrls";
 // import * as actions from "../../actions";
 
 
@@ -27,7 +28,7 @@ export default class Login extends React.Component {
     const code = query.get('code');
     // const code = this.props.match.params.code;
     if(code) {
-      axios(`https://cors-anywhere.herokuapp.com/https://connect.deezer.com/oauth/access_token.php?app_id=${this.app_id}&secret=${this.secret}&code=${code}`)
+      axios(apiUrls.token + code)
         .then(res => {
           console.log(res.data);
           this.setState({
@@ -39,7 +40,7 @@ export default class Login extends React.Component {
 
   onLogin = () => {
       console.log('click');
-      axios(`https://cors-anywhere.herokuapp.com/https://connect.deezer.com/oauth/auth.php?app_id=${this.app_id}&redirect_uri=${this.redirect_uri}&perms=${this.perms}`)
+      axios(apiUrls.login)
         .then(response => {
           window.open(response.headers['x-final-url'], '_self');
         });

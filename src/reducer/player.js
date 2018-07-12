@@ -1,4 +1,4 @@
-import * as types from '../actions/types'
+import * as types from '../actions/player/types'
 import tracksData from '../assets/traksData';
 
 const initialState = {
@@ -12,11 +12,31 @@ const initialState = {
   playing: false,
   repeating: false,
   mute: false,
-  currentTheme: 0
+  search: false,
+  currentTheme: 0,
+  searchTracks: [],
 };
 
 export default function (state = initialState, action) {
   switch (action.type) {
+    case types.FETCH_PLAYLIST_REQUEST:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case types.FETCH_PLAYLIST_SUCCESS:
+      return{
+        ...state,
+        tracks: action.payload,
+        errors: null,
+        currentTrack: action.payload[0],
+        isLoading: false,
+      };
+    case types.FETCH_PLAYLIST_SUCCESS:
+      return{
+        ...state,
+        errors: action.payload
+      };
     case types.FETCH_SONGS_REQUEST:
       return {
         ...state,
@@ -25,9 +45,8 @@ export default function (state = initialState, action) {
     case types.FETCH_SONGS_SUCCESS:
       return{
         ...state,
-        tracks: action.payload,
+        searchTracks: action.payload,
         errors: null,
-        currentTrack: action.payload[0],
         isLoading: false,
       };
     case types.FETCH_SONGS_FAILURE:
@@ -75,10 +94,26 @@ export default function (state = initialState, action) {
         tracks: action.payload,
         random: !state.random,
       };
+    case types.TOGGLE_SEARCH:
+      return{
+        ...state,
+        search: !state.search,
+        searchTracks: []
+      };
     case types.CHANGE_THEME:
       return{
         ...state,
         currentTheme: action.payload,
+      };
+    case types.UPDATE_TRACKS:
+      return{
+        ...state,
+        tracks: action.payload,
+      };
+    case types.UPDATE_SEARCH_TRACKS:
+      return{
+        ...state,
+        searchTracks: action.payload,
       };
     default:
       return state;

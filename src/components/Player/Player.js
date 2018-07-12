@@ -5,12 +5,12 @@ import PlayerTrackList from "./PlayerTrackList";
 import Controls from "./PlayerControls";
 import ProgressBar from "./PlayerProgressBar";
 import TrackInfo from "./PlayerTrackInfo";
-// import axios from "axios/index";
 import PlayerTimestamps from "./PlayerTimestamps";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import * as actions from "../../actions/index"
+import * as actions from "../../actions/player/index"
 import PlayerBtn from "./PlayerBtn";
+import PlayerSearchBar from "./PlayerSearchBar";
 
 class Player extends React.Component {
   //
@@ -45,8 +45,8 @@ class Player extends React.Component {
   }
 
   componentDidMount() {
-
-    this.props.fetchSongs();
+    // this.props.fetchPlaylist(4607141184);
+    this.props.fetchPlaylist(4624389944);
     this.audio.src = this.props.currentTrack.preview;
   }
 
@@ -98,6 +98,24 @@ class Player extends React.Component {
       );
   };
 
+  deleteTrackByIndex = (trackIndex) => {
+    const newTracks = this.props.tracks;
+    newTracks.splice(trackIndex, 1);
+    this.props.updateTracks(newTracks);
+  };
+
+  addTrack = (trackIndex) => {
+    const {tracks, searchTracks} = this.props;
+    const addTrack = searchTracks.splice(trackIndex, 1);
+    tracks.push(...addTrack);
+    // console.log(addTrack);
+    // console.log(tracks);
+    // console.log(searchTracks);
+    this.props.updateTracks(tracks);
+    this.props.updateSearchTracks(searchTracks);
+  };
+
+
   onNext = () => {
     const {repeating, currentIndex, tracks} = this.props;
     const total = tracks.length;
@@ -135,6 +153,7 @@ class Player extends React.Component {
     this.props.changeTheme(nextTheme);
   };
 
+
   render() {
     const {
       isLoading,
@@ -146,7 +165,9 @@ class Player extends React.Component {
       random,
       mute,
       currentTheme,
-      toggleRepeat
+      toggleRepeat,
+      search,
+      searchTracks
     } = this.props;
 
     return (
@@ -208,11 +229,36 @@ class Player extends React.Component {
 
         </div>
 
-        <PlayerTrackList
-          currentTrackIndex={currentTrack.id}
-          changeTrackByIndex={this.changeTrackByIndex}
-          tracks={tracks}
-        />
+        <div className="player__track-list-wrapper">
+          <div className="player__track-list-control">
+            {search?<PlayerSearchBar onSubmit={this.props.fetchSearchSongs}/>:<div>Playlist</div>}
+            <PlayerBtn
+              title="Open Search Menu"
+              btnClassName="small"
+              icoClassName={search ? 'fa-minus-square' : 'fa-plus-square'}
+              onClick={this.props.toggleSearch}
+            />
+          </div>
+          {!search?
+          <PlayerTrackList
+            currentTrackIndex={currentTrack.id}
+            changeTrackByIndex={this.changeTrackByIndex}
+            deleteTrackByIndex={this.deleteTrackByIndex}
+            eventIco = "fa-minus-circle"
+            tracks={tracks}
+          />
+            :
+            <PlayerTrackList
+              currentTrackIndex={currentTrack.id}
+              changeTrackByIndex={() => {}}
+              deleteTrackByIndex={this.addTrack}
+              eventIco = "fa-plus-circle"
+              tracks={searchTracks}
+            />
+          }
+        </div>
+
+
       </div>
     );
   }
@@ -230,7 +276,9 @@ const mapStateToProps = ({player}) => {
     progress,
     random,
     playing,
-    currentTheme
+    currentTheme,
+    search,
+    searchTracks
   } = player;
   return {
     isLoading,
@@ -243,7 +291,9 @@ const mapStateToProps = ({player}) => {
     progress,
     random,
     playing,
-    currentTheme
+    currentTheme,
+    search,
+    searchTracks
   }
 };
 

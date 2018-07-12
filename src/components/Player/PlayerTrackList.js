@@ -31,11 +31,21 @@ export default class PlayerTrackList extends React.Component {
             key={id}
             className={'player__track-item ' + (isCheck ? "selected" : "")}
             ref={el => this.activeTrack = isCheck ? el : this.activeTrack}
-            onClick={() => this.props.changeTrackByIndex(i)}
           >
-            <span className="player__track-number">{i + 1}.</span>
-            <span className="player__track-title">{artist.name} - {title}</span>
-            <span className="player__track-duration">{convertTime(duration)}</span>
+            <span className="player__track-number">
+              {i + 1}.
+            </span>
+            <span className="player__track-delete" onClick={() => this.props.deleteTrackByIndex(i)}>
+              <i className={'fa ' + this.props.eventIco}/>
+            </span>
+            <span className="player__track-item-info" onClick={() => this.props.changeTrackByIndex(i)}>
+              <span className="player__track-title">
+                {artist.name} - {title}
+              </span>
+              <span className="player__track-duration">
+                {convertTime(duration)}
+              </span>
+            </span>
           </li>
         );
 

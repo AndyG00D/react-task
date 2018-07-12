@@ -1,11 +1,36 @@
 import axios from "axios/index";
 import * as types from './types.js';
+import {apiUrls} from "../../apiUrls";
 
-export const fetchSongs = () => {
+export const fetchPlaylist = (playlistId) => {
+  return function (dispatch) {
+    dispatch({type: types.FETCH_PLAYLIST_REQUEST});
+
+    axios(apiUrls.playlist + playlistId)
+      .then((response) => {
+        const tracks = response.data.tracks.data;
+        localStorage.setItem('tracks', JSON.stringify(tracks));
+        dispatch({
+          type: types.FETCH_PLAYLIST_SUCCESS,
+          payload: tracks
+        })
+      })
+      .catch((error) => {
+        dispatch({
+          type: types.FETCH_PLAYLIST_FAILURE,
+          payload: error
+        })
+      });
+
+  }
+};
+
+
+export const fetchSearchSongs = (query) => {
   return function (dispatch) {
     dispatch({type: types.FETCH_SONGS_REQUEST});
 
-    axios(`https://cors-anywhere.herokuapp.com/https://api.deezer.com/playlist/4607141184/tracks`)
+    axios(apiUrls.search + query.search)
       .then((response) => {
         dispatch({
           type: types.FETCH_SONGS_SUCCESS,
@@ -72,6 +97,13 @@ export const toggleRepeat = () => {
   }
 };
 
+export const toggleSearch = () => {
+  return function (dispatch) {
+    dispatch({
+      type: types.TOGGLE_SEARCH
+    });
+  }
+};
 
 export const changeTheme = (nextTheme) => {
   return function (dispatch, getState) {
@@ -90,3 +122,24 @@ export const setCurrentTrack = (trackId) => {
     });
   }
 };
+
+export const updateTracks = (tracks) => {
+  localStorage.setItem('tracks', JSON.stringify(tracks));
+  return function (dispatch) {
+    dispatch({
+      type: types.UPDATE_TRACKS,
+      payload: tracks
+    });
+  }
+};
+
+export const updateSearchTracks = (tracks) => {
+  return function (dispatch) {
+    dispatch({
+      type: types.UPDATE_SEARCH_TRACKS,
+      payload: tracks
+    });
+  }
+};
+
+
