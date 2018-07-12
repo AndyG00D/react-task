@@ -4,12 +4,12 @@ import Header from "./components/Header/Header";
 import Player from "./components/Player/Player";
 import {BrowserRouter, Route} from "react-router-dom"
 import ItemList from "./components/ItemList/ItemList";
-import Login from "./components/Login/Login";
+import LoginDeezer from "./components/LoginDeezer/LoginDeezer";
 import { applyMiddleware, compose, createStore } from 'redux'
 import reduxThunk from 'redux-thunk'
 import {Provider} from 'react-redux'
 import rootReducer from './reducer/index'
-import LoginReqresIn from "./components/LoginReqresIn/LoginReqresIn";
+import LoginReqresIn from "./components/DemoFormPage/DemoFormPage";
 
 
 const store = createStore(rootReducer, compose(
@@ -27,7 +27,7 @@ export default function App() {
       <div className="content">
         <Route exact path="/itemList" component={ItemList}/>
         <Route exact path="/player" component={Player}/>
-        <Route exact path="/login" component={Login}/>
+        <Route exact path="/login" component={LoginDeezer}/>
         <Route exact path="/form" component={LoginReqresIn}/>
       </div>
     </div>

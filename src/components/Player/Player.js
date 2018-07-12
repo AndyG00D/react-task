@@ -108,9 +108,6 @@ class Player extends React.Component {
     const {tracks, searchTracks} = this.props;
     const addTrack = searchTracks.splice(trackIndex, 1);
     tracks.push(...addTrack);
-    // console.log(addTrack);
-    // console.log(tracks);
-    // console.log(searchTracks);
     this.props.updateTracks(tracks);
     this.props.updateSearchTracks(searchTracks);
   };
