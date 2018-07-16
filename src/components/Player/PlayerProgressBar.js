@@ -1,10 +1,22 @@
 import React from 'react';
+import PropTypes from "prop-types";
 
-export default function PlayerProgressBar (props) {
+PlayerProgressBar.propTypes = {
+  setProgress: PropTypes.func,
+  progress: PropTypes.number,
+};
 
-    return (
-      <div className="player__progress-bar" onClick={props.setProgress}>
-        <div className="player__progress-bar-line" style={{width: props.progress + '%'}}/>
-      </div>
-    )
+PlayerProgressBar.defaultProps = {
+  setProgress: () => {
+  },
+  progress: 0
+};
+
+export default function PlayerProgressBar(props) {
+
+  return (
+    <div className="player__progress-bar" onClick={props.setProgress}>
+      <div className="player__progress-bar-line" style={{width: props.progress + '%'}}/>
+    </div>
+  )
 }

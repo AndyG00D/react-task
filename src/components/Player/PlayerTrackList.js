@@ -1,7 +1,27 @@
 import React from 'react';
-import {convertTime} from "../../utils";
+import {convertTime} from "../../utils/utils";
+import PropTypes from "prop-types";
 
 export default class PlayerTrackList extends React.Component {
+
+  static propTypes = {
+    currentTrackIndex: PropTypes.string,
+    changeTrackByIndex: PropTypes.func,
+    deleteTrackByIndex: PropTypes.func,
+    eventIco: PropTypes.string,
+    tracks: PropTypes.array
+  };
+
+  static defaultProps = {
+    currentTrackIndex: '0',
+    changeTrackByIndex: () => {
+    },
+    deleteTrackByIndex: () => {
+    },
+    eventIco: "fa-minus-circle",
+    tracks: []
+  };
+
   constructor(props) {
     super(props);
     this.trackList = React.createRef();

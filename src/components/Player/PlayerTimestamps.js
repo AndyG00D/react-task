@@ -1,5 +1,5 @@
 import React from 'react';
-import {convertTime} from "../../utils";
+import {convertTime} from "../../utils/utils";
 import PropTypes from "prop-types";
 
 PlayerTimestamps.propTypes = {
@@ -20,5 +20,4 @@ export default function PlayerTimestamps(props) {
       <span>{convertTime(duration)}</span>
     </div>
   )
-
 }

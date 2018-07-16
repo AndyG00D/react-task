@@ -1,58 +1,57 @@
 import React from 'react';
-import axios from "axios/index";
 import './LoginDeezer.css';
-import {apiUrls} from "../../apiUrls";
+import {fetchAuth, fetchAuthToken} from "../../actions/auth";
+import {connect} from "react-redux";
+import PropTypes from "prop-types";
 
-export default class LoginDeezer extends React.Component {
+class LoginDeezer extends React.Component {
 
-  constructor() {
-    super();
+  static propTypes = {
+    fetchAuthToken: PropTypes.func,
+    fetchAuth: PropTypes.func,
+    token: PropTypes.string,
+  };
 
-    this.state = {
-      token: ''
-    };
+  static defaultProps = {
+    fetchAuthToken: () => {
+    },
+    fetchAuth: () => {
+    },
+    token: '',
+  };
+
+  constructor(props) {
+    super(props);
   }
 
   componentDidMount() {
     const query = new URLSearchParams(window.location.search);
     const code = query.get('code');
     if (code) {
-      axios(apiUrls.token + code)
-        .then(res => {
-          console.log(res.data);
-          this.setState({
-            token: res.data
-          });
-        })
+      this.props.fetchAuthToken(code);
     }
   }
-
-  onLogin = () => {
-    console.log('click');
-    axios(apiUrls.login)
-      .then(response => {
-        window.open(response.headers['x-final-url'], '_self');
-      });
-  };
-
-  submit = values => {
-    console.log(values);
-    this.props.fetchAuth(values);
-  };
-
 
   render() {
     return (
       <div>
         <h1>Login</h1>
-        <button onClick={this.onLogin}>Login</button>
-        <br/>
-        <br/>
-        {this.state.token}
+        <button onClick={this.props.fetchAuth}>Login</button>
+        <p>{this.props.token && `Token = ${this.props.token}`}</p>
       </div>
     );
   }
 }
 
+const mapStateToProps = ({auth}) => {
+  const {
+    token
+  } = auth;
+  return {
+    token
+  }
+};
+
+export default connect(mapStateToProps, {fetchAuth, fetchAuthToken})(LoginDeezer);
 
 

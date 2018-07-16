@@ -14,6 +14,8 @@ export const RenderField = ({input, label, meta}) => {
       case 'password':
         message =  'Wrong password format (expl:dfs45435)';
         break;
+      default: 
+        return
     }
     return meta.touched && message && <div className="alert">{message}</div>
   };

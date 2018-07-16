@@ -1,5 +1,5 @@
 import React from 'react';
-import themes from './PlayerThemes'
+import themes from '../../assets/PlayerThemes'
 import './Player.css';
 import PlayerTrackList from "./PlayerTrackList";
 import Controls from "./PlayerControls";
@@ -13,18 +13,63 @@ import PlayerBtn from "./PlayerBtn";
 import PlayerSearchBar from "./PlayerSearchBar";
 
 class Player extends React.Component {
-  //
-  // static propTypes = {
-  //   tracks: PropTypes.array.isRequired,
-  //   onTimeUpdate: PropTypes.func,
-  //   onEnded: PropTypes.func,
-  //   play:  PropTypes.func,
-  //   pause: PropTypes.func,
-  //   onPrevious: PropTypes.func,
-  //   onNext: PropTypes.func
-  //
-  // };
-  //
+  static propTypes = {
+    isLoading: PropTypes.bool,
+    tracks: PropTypes.array,
+    errors: PropTypes.string,
+    repeating: PropTypes.bool,
+    currentTrack: PropTypes.object,
+    mute: PropTypes.bool,
+    currentIndex: PropTypes.number,
+    progress: PropTypes.number,
+    random: PropTypes.bool,
+    playing: PropTypes.bool,
+    currentTheme: PropTypes.number,
+    search: PropTypes.bool,
+    searchTracks: PropTypes.array,
+    setProgress: PropTypes.func,
+    play: PropTypes.func,
+    pause: PropTypes.func,
+    setCurrentTrack: PropTypes.func,
+    updateTracks: PropTypes.func,
+    updateSearchTracks: PropTypes.func,
+    toggleRandom: PropTypes.func,
+    toggleMute: PropTypes.func,
+    changeTheme: PropTypes.func,
+    toggleSearch: PropTypes.func,
+    changeTrackByIndex: PropTypes.func,
+    deleteTrackByIndex: PropTypes.func,
+    addTrack: PropTypes.func
+  };
+
+  static defaultProps = {
+    isLoading: false,
+    tracks: [],
+    errors: null,
+    repeating: true,
+    currentTrack: null,
+    mute: false,
+    currentIndex: 0,
+    progress: 0,
+    random: false,
+    playing: false,
+    currentTheme: 0,
+    search: false,
+    searchTracks: [],
+    setProgress: () => {},
+    play: () => {},
+    pause: () => {},
+    setCurrentTrack: () => {},
+    updateTracks: () => {},
+    updateSearchTracks: () => {},
+    toggleRandom: () => {},
+    toggleMute: () => {},
+    changeTheme: () => {},
+    toggleSearch: () => {},
+    changeTrackByIndex: () => {},
+    deleteTrackByIndex: () => {},
+    addTrack: () => {}
+  };
 
   constructor(props) {
     super(props);
@@ -41,13 +86,13 @@ class Player extends React.Component {
     this.audio.addEventListener('error', e => {
       this.onNext();
     });
-
   }
 
   componentDidMount() {
-    // this.props.fetchPlaylist(4607141184);
-    this.props.fetchPlaylist(4624389944);
-    this.audio.src = this.props.currentTrack.preview;
+  }
+
+  componentWillUnmount(){
+    this.pause();
   }
 
   // Sort functions
@@ -162,7 +207,6 @@ class Player extends React.Component {
       random,
       mute,
       currentTheme,
-      toggleRepeat,
       search,
       searchTracks
     } = this.props;
@@ -210,7 +254,7 @@ class Player extends React.Component {
             random={random}
             toggleRandom={this.toggleRandom}
             repeating={repeating}
-            toggleRepeat={toggleRepeat}
+            toggleRepeat={this.props.toggleRepeat}
           />
 
           <PlayerTimestamps

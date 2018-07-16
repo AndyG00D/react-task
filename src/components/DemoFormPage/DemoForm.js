@@ -2,7 +2,7 @@ import React from 'react';
 import './DemoForm.css';
 import {Field} from 'redux-form'
 import {reduxForm} from 'redux-form'
-import {email, required, password} from "./validationsUtils";
+import {email, required, password} from "../../utils/validations";
 import {RenderField} from "./RenderField";
 
 let DemoForm = props => {

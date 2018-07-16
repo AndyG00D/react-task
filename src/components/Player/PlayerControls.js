@@ -1,5 +1,32 @@
 import React from 'react';
 import PlayerBtn from "./PlayerBtn";
+import PropTypes from "prop-types";
+
+PlayerControls.propTypes = {
+  playing: PropTypes.bool,
+  togglePlay: PropTypes.func,
+  onPrevious: PropTypes.func,
+  onNext: PropTypes.func,
+  random: PropTypes.bool,
+  toggleRandom: PropTypes.func,
+  repeating: PropTypes.bool,
+  toggleRepeat: PropTypes.func
+};
+
+PlayerControls.defaultProps = {
+  playing: false,
+  togglePlay: () => {
+  },
+  onPrevious: () => {
+  },
+  onNext: PropTypes.func,
+  random: false,
+  toggleRandom: () => {
+  },
+  repeating: false,
+  toggleRepeat: () => {
+  }
+};
 
 export default function PlayerControls(props) {
   const {

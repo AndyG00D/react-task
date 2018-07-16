@@ -4,6 +4,8 @@ import Item from './Item';
 import data from '../../assets/artistsData'
 
 export default class ItemList extends React.Component {
+
+
   constructor() {
     super();
     this.state = {

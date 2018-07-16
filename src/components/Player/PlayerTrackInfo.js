@@ -1,4 +1,18 @@
 import React from 'react';
+import PropTypes from "prop-types";
+
+
+PlayerTrackInfo.propTypes = {
+  artist: PropTypes.string,
+  title: PropTypes.string,
+  album: PropTypes.string
+};
+
+PlayerTrackInfo.defaultProps = {
+  artist: '',
+  title: '',
+  album: ''
+};
 
 export default function PlayerTrackInfo(props) {
 

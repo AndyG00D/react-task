@@ -1,10 +1,19 @@
 import * as types from '../actions/player/types'
 import tracksData from '../assets/traksData';
 
+const getInitialTracks = () => {
+  const tracks = localStorage.getItem('tracks');
+  if (tracks !== null) {
+    return JSON.parse(tracks);
+  }
+  return tracksData.data;
+};
+
+
 const initialState = {
-  tracks: tracksData.data,
+  tracks: getInitialTracks(),
   isLoading: false,
-  errors:null,
+  errors: null,
   currentTrack: tracksData.data[0],
   currentIndex: 0,
   progress: 0,
@@ -25,17 +34,12 @@ export default function (state = initialState, action) {
         isLoading: true,
       };
     case types.FETCH_PLAYLIST_SUCCESS:
-      return{
+      return {
         ...state,
         tracks: action.payload,
         errors: null,
         currentTrack: action.payload[0],
         isLoading: false,
-      };
-    case types.FETCH_PLAYLIST_SUCCESS:
-      return{
-        ...state,
-        errors: action.payload
       };
     case types.FETCH_SONGS_REQUEST:
       return {
@@ -43,44 +47,44 @@ export default function (state = initialState, action) {
         isLoading: true,
       };
     case types.FETCH_SONGS_SUCCESS:
-      return{
+      return {
         ...state,
         searchTracks: action.payload,
         errors: null,
         isLoading: false,
       };
     case types.FETCH_SONGS_FAILURE:
-      return{
+      return {
         ...state,
         errors: action.payload
       };
     case types.SET_PROGRESS:
-      return{
+      return {
         ...state,
         progress: action.payload
       };
     case types.TOGGLE_MUTE:
-      return{
+      return {
         ...state,
         mute: !state.mute
       };
     case types.PLAY:
-      return{
+      return {
         ...state,
         playing: true
       };
     case types.PAUSE:
-      return{
+      return {
         ...state,
         playing: false
       };
     case types.TOGGLE_REPEAT:
-      return{
+      return {
         ...state,
         repeating: !state.repeating
       };
     case types.SET_CURRENT_TRACK:
-      return{
+      return {
         ...state,
         currentIndex: action.payload,
         currentTrack: state.tracks[action.payload],
@@ -89,29 +93,29 @@ export default function (state = initialState, action) {
         // playing: true
       };
     case types.TOGGLE_RANDOM:
-      return{
+      return {
         ...state,
         tracks: action.payload,
         random: !state.random,
       };
     case types.TOGGLE_SEARCH:
-      return{
+      return {
         ...state,
         search: !state.search,
         searchTracks: []
       };
     case types.CHANGE_THEME:
-      return{
+      return {
         ...state,
         currentTheme: action.payload,
       };
     case types.UPDATE_TRACKS:
-      return{
+      return {
         ...state,
         tracks: action.payload,
       };
     case types.UPDATE_SEARCH_TRACKS:
-      return{
+      return {
         ...state,
         searchTracks: action.payload,
       };
@@ -119,3 +123,5 @@ export default function (state = initialState, action) {
       return state;
   }
 }
+
+

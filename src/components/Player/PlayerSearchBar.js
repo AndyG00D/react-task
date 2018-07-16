@@ -1,6 +1,6 @@
 import React from 'react';
 import '../DemoFormPage/DemoForm.css';
-import {Field, reducer as formReducer} from 'redux-form'
+import {Field} from 'redux-form'
 import { reduxForm } from 'redux-form'
 import PlayerBtn from "./PlayerBtn";
 
